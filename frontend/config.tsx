@@ -1,6 +1,6 @@
 const CONTRACT_NAME = process.env.CONTRACT_NAME || "testnet";
 
-function getConfig(env) {
+function getConfig(env: any) {
   switch(env) {
     case 'mainnet':
       return {
@@ -58,4 +58,4 @@ function getConfig(env) {
   }
 }
 
-module.exports = getConfig;
+export default getConfig;

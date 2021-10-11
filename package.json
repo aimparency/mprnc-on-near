@@ -27,6 +27,10 @@
   },
   "homepage": "https://github.com/near-examples/rust-status-message#readme",
   "dependencies": {
+    "@types/jest": "^27.0.2",
+    "@types/node": "^16.10.3",
+    "@types/react": "^17.0.27",
+    "@types/react-dom": "^17.0.9",
     "big.js": "^5.2.2",
     "borsh": "^0.4.0",
     "env-cmd": "^10.1.0",
@@ -34,12 +38,15 @@
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "regenerator-runtime": "^0.13.9"
+    "regenerator-runtime": "^0.13.9",
+    "typescript": "^4.4.3"
   },
   "devDependencies": {
     "@babel/core": "^7.14.0",
     "@babel/preset-env": "^7.14.2",
     "@babel/preset-react": "^7.13.13",
+    "@types/big.js": "^6.1.2",
+    "@types/regenerator-runtime": "^0.13.1",
     "cssnano": "^5.0.7",
     "gh-pages": "^3.1.0",
     "parcel-bundler": "^1.12.5",

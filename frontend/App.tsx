@@ -1,5 +1,5 @@
-import "regenerator-runtime/runtime";
-import React, { useState, useEffect } from "react";
+import "regenerator-runtime";
+import * as React from "react";
 import PropTypes from "prop-types";
 import Big from "big.js";
 import Form from "./components/Form";
@@ -7,27 +7,24 @@ import Form from "./components/Form";
 const BOATLOAD_OF_GAS = Big(3).times(10 ** 13).toFixed();
 
 const App = ({ contract, currentUser, nearConfig, wallet }) => {
-  const [status, setStatus] = useState(null);
 
-  useEffect(async () => {
+  console.log("react", React)
+
+
+  const [status, setStatus] = React.useState();
+
+  React.useEffect(() => {
     if (currentUser) {
-      const status = await contract.get_status({
+      contract.get_status({
         account_id: currentUser.accountId
-      });
-
-      setStatus(status);
+      }).then(setStatus)
     }
   });
 
-  const onSubmit = async event => {
-    event.preventDefault();
-
-    const { fieldset, message } = event.target.elements;
-    fieldset.disabled = true;
-
+  const onSubmit = async (newStatus: String, fieldset: HTMLFieldSetElement) => {
     await contract.set_status(
       {
-        message: message.value,
+        message: newStatus,
         account_id: currentUser.accountId
       },
       BOATLOAD_OF_GAS
@@ -38,10 +35,8 @@ const App = ({ contract, currentUser, nearConfig, wallet }) => {
     });
 
     setStatus(status);
-
-    message.value = "";
+    console.log('fs', fieldset)
     fieldset.disabled = false;
-    message.focus();
   };
 
   const signIn = () => {
@@ -76,11 +71,10 @@ const App = ({ contract, currentUser, nearConfig, wallet }) => {
       {currentUser &&
         <Form
           onSubmit={onSubmit}
-          currentUser={currentUser}
         />
       }
 
-      {status ?
+      {status?
         <>
           <p>Your current status:</p>
           <p>

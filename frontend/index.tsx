@@ -1,9 +1,17 @@
-import React from 'react';
+import * as React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import getConfig from './config.js';
+import getConfig from './config';
 import * as nearAPI from 'near-api-js';
 
+declare global {
+    interface Window { 
+        nearInitPromise, 
+        walletConnection,
+        accountId,
+        contract
+    }
+}
 // Initializing contract
 async function initContract() {
   const nearConfig = getConfig(process.env.NODE_ENV || 'testnet');
@@ -15,10 +23,13 @@ async function initContract() {
   });
 
   // Needed to access wallet
-  const walletConnection = new nearAPI.WalletConnection(near);
+  const walletConnection = new nearAPI.WalletConnection(near, null);
 
   // Load in account data
-  let currentUser;
+  let currentUser: {
+    accountId: string, 
+    balance: string 
+	};
   if(walletConnection.getAccountId()) {
     currentUser = {
       accountId: walletConnection.getAccountId(),
@@ -27,14 +38,14 @@ async function initContract() {
   }
 
   // Initializing our contract APIs by contract name and configuration
-  const contract = await new nearAPI.Contract(walletConnection.account(), nearConfig.contractName, {
+  const contract = new nearAPI.Contract(walletConnection.account(), nearConfig.contractName, {
     // View methods are read-only – they don't modify the state, but usually return some value
     viewMethods: ['get_status'],
     // Change methods can modify the state, but you don't receive the returned value when called
     changeMethods: ['set_status'],
     // Sender is the account ID to initialize transactions.
     // getAccountId() will return empty string if user is still unauthorized
-    sender: walletConnection.getAccountId()
+    // sender: walletConnection.getAccountId()
   });
 
   return { contract, currentUser, nearConfig, walletConnection };
