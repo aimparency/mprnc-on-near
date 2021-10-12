@@ -47,11 +47,9 @@
     "@babel/preset-react": "^7.13.13",
     "@types/big.js": "^6.1.2",
     "@types/regenerator-runtime": "^0.13.1",
-    "cssnano": "^5.0.7",
     "gh-pages": "^3.1.0",
     "parcel-bundler": "^1.12.5",
-    "postcss": "^8.3.6",
-    "sass": "^1.37.0"
+    "sass": "^1.42.1"
   },
   "resolutions": {
     "@babel/preset-env": "7.13.8"

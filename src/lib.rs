@@ -91,7 +91,7 @@ impl Aimparency {
     pub fn get_aim(&self, id: String) -> Result<Aim, String> {
         match self.aims.get(&id) {
             Some(aim) => Ok(aim), 
-            None => Err("No such connection".to_string())
+            None => Err("No such aim".to_string())
         }
     }
 

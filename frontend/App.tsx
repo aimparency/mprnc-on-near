@@ -2,6 +2,7 @@ import "regenerator-runtime";
 import * as React from "react";
 import PropTypes from "prop-types";
 import Big from "big.js";
+import Aims from "./components/Aims"; 
 import Form from "./components/Form";
 
 const BOATLOAD_OF_GAS = Big(3).times(10 ** 13).toFixed();
@@ -38,7 +39,7 @@ const App = ({ contract, currentUser, nearConfig, wallet }) => {
   const signIn = () => {
     wallet.requestSignIn(
       nearConfig.contractName,
-      "NEAR Status Message"
+      "mprnc"
     );
   };
 
@@ -47,10 +48,11 @@ const App = ({ contract, currentUser, nearConfig, wallet }) => {
     window.location.replace(window.location.origin + window.location.pathname);
   };
 
+
   return (
     <main>
       <header>
-        <h1>NEAR Status Message</h1>
+        <h1>mprnc</h1>
 
         {currentUser ?
           <p>Currently signed in as: <code>{currentUser.accountId}</code></p>
@@ -64,11 +66,6 @@ const App = ({ contract, currentUser, nearConfig, wallet }) => {
         }
       </header>
 
-      {currentUser &&
-        <Form
-          onSubmit={onSubmit}
-        />
-      }
 
       {status?
         <>
@@ -82,6 +79,20 @@ const App = ({ contract, currentUser, nearConfig, wallet }) => {
       :
         <p>No status message yet!</p>
       }
+
+      {currentUser &&
+        <>
+          <Form
+            onSubmit={onSubmit}
+          />
+          <Aims
+            contract={contract}
+            currentUser={currentUser}
+          />
+        </>
+      }
+
+
     </main>
   );
 };
@@ -89,7 +100,11 @@ const App = ({ contract, currentUser, nearConfig, wallet }) => {
 App.propTypes = {
   contract: PropTypes.shape({
     set_status: PropTypes.func.isRequired,
-    get_status: PropTypes.func.isRequired
+    get_status: PropTypes.func.isRequired, 
+    add_aim: PropTypes.func.isRequired, 
+    get_aim: PropTypes.func.isRequired, 
+    connect_aim: PropTypes.func.isRequired, 
+    get_connection: PropTypes.func.isRequired, 
   }).isRequired,
   currentUser: PropTypes.shape({
     accountId: PropTypes.string.isRequired,

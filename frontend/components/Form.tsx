@@ -16,16 +16,19 @@ export default function Form({ onSubmit }) {
     setNewStatus(event.target.value);  
   }
 
+  console.log("Rendering Form") 
+
   return (
     <form onSubmit={handleSubmit}>
       <fieldset id="fieldset" ref={fieldset}>
         <p>Add or update your status message!</p>
         <p className="highlight">
-          <label htmlFor="message">Message:</label>
+          <label htmlFor="status">Status message:</label>
           <input
             autoComplete="off"
             autoFocus
             required
+            name="status" 
             value={newStatus}
             onChange={updateNewStatus}
           />
