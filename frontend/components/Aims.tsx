@@ -25,9 +25,9 @@ export default function Aims({ contract, currentUser }) {
   const [connections, setConnections] = React.useState<ConnectionState>({})
 
   const [nextAimId, setNextAimId] = React.useState(0)
-  const [initializing, setInitializing] = React.useState(true)
 
   React.useEffect(() => {
+    let aimIds = []
     // initialize - as we don't have an indexer yet, just load aims with id 1,2,...,n until there are no more. 
     const loadAims = async () => {
       let loop = true
@@ -36,6 +36,7 @@ export default function Aims({ contract, currentUser }) {
         console.log("trying to load aim with id", id)
         const aim = await contract.get_aim({id})
         if (aim.Ok !== undefined) {
+          aimIds.push(id)
           setAims(prev => ({...prev, [id]: aim.Ok}))
         } else {
           loop = false
@@ -46,22 +47,23 @@ export default function Aims({ contract, currentUser }) {
 
     // then try to load all connections between those aims
     const loadConnections = async () => {
-      const aim_ids = Object.keys(aims)
-      aim_ids.forEach(contributor_id => {
-        aim_ids.forEach(async beneficiary_id => {
+      console.log("aim ids:", aimIds)
+      aimIds.forEach(contributor_id => {
+        aimIds.forEach(async beneficiary_id => {
+          console.log("trying to load connection", contributor_id, "-->", beneficiary_id)
           const result = await contract.get_connection({contributor_id, beneficiary_id})
+          console.log("result", result) 
           if (result.Ok !== undefined) {
             setConnections(prev => ({
               ...prev, 
-              [result.contributor_id]: {
-                ...prev[result.contributor_id], 
-                [result.beneficiary_id]: result.Ok
+              [contributor_id]: {
+                ...prev[contributor_id], 
+                [beneficiary_id]: result.Ok
               }
             }))
           }
         })
       })
-      setInitializing(false)
     }
 
     loadAims().then(
@@ -94,6 +96,27 @@ export default function Aims({ contract, currentUser }) {
     setNewAimTitle("")
   }
 
+  const [ccc, setCcc] = React.useState<string | undefined>(undefined); 
+
+  const startConnectAim = (id: string) => {
+    setCcc(id)
+  } 
+
+  const completeConnectAim = async (id: string) => {
+    console.log("creating connection from", ccc, "to", id)
+    const contributor_id = ccc
+    const beneficiary_id = id
+    console.log(await contract.connect_aim({contributor_id, beneficiary_id}))
+    setConnections(prev => ({
+      ...prev, 
+      [ccc]: {
+        ...prev[ccc], 
+        [id]: {}
+      }
+    }))
+    setCcc(undefined)
+  } 
+
   return (
     <>
       <form onSubmit={createAim}>
@@ -122,9 +145,20 @@ export default function Aims({ contract, currentUser }) {
           const aim = aims[id]
           return (
             <div className="aim" key={id}>
-              id: {id}<br/>
-              title: {aim.title}<br/>
-              owner: {aim.owner}
+              <div className="info">
+                id: {id}<br/>
+                title: {aim.title}<br/>
+                owner: {aim.owner}
+              </div>
+              { ccc === undefined ?
+                <div className="connect from" onClick={() => startConnectAim(id)}>
+                  contribute from 
+                </div>
+                :
+                <div className="connect to" onClick={() => completeConnectAim(id)}>
+                  contribute to
+                </div>
+              }
             </div>
           )
         })
@@ -132,13 +166,11 @@ export default function Aims({ contract, currentUser }) {
       <h2> connections </h2>
       { 
         Object.keys(connections).map(contributor_id => {
-          Object.keys(connections).map(beneficiary_id => {
-            return (
-              <div className="connection">
-                { contributor_id } {'-->'} { beneficiary_id }
-              </div>
-            )
-          })
+          return Object.keys(connections[contributor_id]).map(beneficiary_id => (
+            <div className="connection" key={contributor_id + '-' + beneficiary_id}>
+              { contributor_id } {'-->'} { beneficiary_id }
+            </div>
+          ))
         }).flat()
       }
     </>

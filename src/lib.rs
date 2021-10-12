@@ -12,7 +12,7 @@ pub struct Connection {
 impl Connection {
 }
 
-#[derive(BorshDeserialize, BorshSerialize)]
+#[derive(BorshDeserialize, BorshSerialize, Eq, PartialEq, Hash)]
 pub struct ConnectionKey {
     pub contributor_id: String, 
     pub beneficiary_id: String

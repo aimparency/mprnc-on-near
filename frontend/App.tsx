@@ -66,8 +66,13 @@ const App = ({ contract, currentUser, nearConfig, wallet }) => {
         }
       </header>
 
+      {/*currentUser &&
+          <Form
+            onSubmit={onSubmit}
+          />
+      */}
 
-      {status?
+      {/*status?
         <>
           <p>Your current status:</p>
           <p>
@@ -78,20 +83,12 @@ const App = ({ contract, currentUser, nearConfig, wallet }) => {
         </>
       :
         <p>No status message yet!</p>
-      }
+      */}
 
-      {currentUser &&
-        <>
-          <Form
-            onSubmit={onSubmit}
-          />
-          <Aims
-            contract={contract}
-            currentUser={currentUser}
-          />
-        </>
-      }
-
+      <Aims
+        contract={contract}
+        currentUser={currentUser}
+      />
 
     </main>
   );

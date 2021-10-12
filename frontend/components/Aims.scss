@@ -1,0 +1,30 @@
+.aim {
+  background-color: #fff3; 
+  border-radius: 0.25rem; 
+  margin: 0.5rem; 
+  padding: 0.5rem; 
+
+  .info, .connect {
+    display: inline-block; 
+    margin: 0.25rem; 
+    padding: 0.25rem;
+    vertical-align: top; 
+  }
+
+  .connect {
+    border-radius: 0.25rem; 
+    cursor: pointer; 
+
+    box-shadow: 0 0 0.7rem #111b; 
+    
+    &.from {
+      background-color: #2ac4;
+    }
+    &.to {
+      background-color: #b484;
+    }
+    &:hover {
+      box-shadow: 0 0 0.3rem #111b; 
+    }
+  }
+}
