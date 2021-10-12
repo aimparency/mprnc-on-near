@@ -23,62 +23,50 @@ export default function Aims({ contract, currentUser }) {
   const [aims, setAims] = React.useState<AimsState>({})
   const [connections, setConnections] = React.useState<ConnectionState>({})
 
-  const [initializing, setInitializing] = React.useState(true) 
-
   const [nextAimId, setNextAimId] = React.useState(0)
+  const [initializing, setInitializing] = React.useState(true)
 
-  // initialize - as we don't have an indexer yet, just load aims with id 1,2,...,n until there are no more. 
-  const tryLoadNextAim = async () => {
-    const id = String(nextAimId)
-    console.log("trying to load aim with id", id)
-    const aim = await contract.get_aim({id})
-    if (aim.Ok !== undefined) {
-      setAims(prev => ({...prev, [id]: aim.Ok}))
-      setNextAimId(nextAimId + 1)
-    } else {
-      loadConnections()
-    }
-  }
-
-  // then try to load all connections between those aims
-  const loadConnections = async () => {
-    class Result {
-      public contributor_id: string
-      public beneficiary_id: string
-      connection: Connection | null
-    }
-    const promises: Promise<Result>[] = []
-    const aim_ids = Object.keys(aims)
-    aim_ids.forEach(contributor_id => {
-      aim_ids.forEach(beneficiary_id => {
-        promises.push(
-          contract.get_connection({contributor_id, beneficiary_id}).then((connection:any) => ({
-            contributor_id,
-            beneficiary_id, 
-            connection: connection.Ok !== undefined ? connection.Ok : null
-          }))
-        )
-      })
-    })
-    Promise.all(promises).then((connections:any) => {
-      connections.forEach((result:Result) => {
-        if (result.connection !== null) {
-          setConnections(prev => ({
-            ...prev, 
-            [result.contributor_id]: {
-              ...prev[result.contributor_id], 
-              [result.beneficiary_id]: result.connection
-            }
-          }))
+  React.useEffect(() => {
+    // initialize - as we don't have an indexer yet, just load aims with id 1,2,...,n until there are no more. 
+    const loadAims = async () => {
+      let loop = true
+      for(let i = 0; loop; i++) {
+        const id = String(i)
+        console.log("trying to load aim with id", id)
+        const aim = await contract.get_aim({id})
+        if (aim.Ok !== undefined) {
+          setAims(prev => ({...prev, [id]: aim.Ok}))
+        } else {
+          loop = false
+          setNextAimId(i)
         }
+      }
+    }
+
+    // then try to load all connections between those aims
+    const loadConnections = async () => {
+      const aim_ids = Object.keys(aims)
+      aim_ids.forEach(contributor_id => {
+        aim_ids.forEach(async beneficiary_id => {
+          const result = await contract.get_connection({contributor_id, beneficiary_id})
+          if (result.Ok !== undefined) {
+            setConnections(prev => ({
+              ...prev, 
+              [result.contributor_id]: {
+                ...prev[result.contributor_id], 
+                [result.beneficiary_id]: result.Ok
+              }
+            }))
+          }
+        })
       })
       setInitializing(false)
-    })
-  }
+    }
 
-  if(initializing) {
-    tryLoadNextAim()
-  }
+    loadAims().then(
+      () => { loadConnections() }
+    )
+  }, [])
 
   const [newAimTitle, setNewAimTitle] = React.useState<string>(""); 
   const updateNewAimTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -88,12 +76,20 @@ export default function Aims({ contract, currentUser }) {
   const createAim = async (e: React.FormEvent<HTMLFormElement>) => {
     console.log("creating aim!")
     e.preventDefault()
-    const id = String(nextAimId++)
+    const id = String(nextAimId)
     console.log(id) 
     await contract.add_aim({
       title: newAimTitle, 
       id
     });
+    setNextAimId(nextAimId + 1)
+    setAims(prev => ({
+      ...prev, 
+      [id]: {
+        title: newAimTitle, 
+        owner: currentUser.accountId
+      }
+    }))
     setNewAimTitle("")
   }
 
