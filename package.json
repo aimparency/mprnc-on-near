@@ -5,14 +5,14 @@
   "scripts": {
     "build": "cargo build --target wasm32-unknown-unknown --release",
     "build:web": "parcel build ./frontend/index.html --public-url ./ --no-minify",
-    "deploy:dev": "npm run build && near dev-deploy res/status_message.wasm",
+    "deploy:dev": "npm run build && near dev-deploy res/mprnc.wasm",
     "dev": "npm run deploy:dev && npm start",
     "start": "npm run build && npm run build:web && env-cmd -f ./neardev/dev-account.env parcel ./frontend/index.html",
-    "postbuild": "cp target/wasm32-unknown-unknown/release/status_message.wasm ./res/"
+    "postbuild": "cp target/wasm32-unknown-unknown/release/mprnc.wasm ./res/"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/near-examples/rust-status-message.git"
+    "url": "git+https://github.com/aimparency/mprnc-on-near.git"
   },
   "keywords": [
     "near-protocol",
