@@ -8,9 +8,6 @@ const BOATLOAD_OF_GAS = Big(3).times(10 ** 13).toFixed();
 
 const App = ({ contract, currentUser, nearConfig, wallet }) => {
 
-  console.log("react", React)
-
-
   const [status, setStatus] = React.useState();
 
   React.useEffect(() => {
@@ -35,7 +32,6 @@ const App = ({ contract, currentUser, nearConfig, wallet }) => {
     });
 
     setStatus(status);
-    console.log('fs', fieldset)
     fieldset.disabled = false;
   };
 

@@ -1,7 +1,7 @@
 {
-  "name": "rust-status-message-builder",
-  "version": "1.0.0",
-  "description": "Compiles NEAR Protocol example of setting and retrieving a status message per NEAR account",
+  "name": "mprnc",
+  "version": "0.0.1",
+  "description": "Aimparency on NEAR allows to structure your aims as a graph.",
   "scripts": {
     "build": "cargo build --target wasm32-unknown-unknown --release",
     "build:web": "parcel build ./frontend/index.html --public-url ./ --no-minify",

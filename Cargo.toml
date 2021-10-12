@@ -1,7 +1,7 @@
 [package]
-name = "status-message"
+name = "mprnc"
 version = "0.1.0"
-authors = ["Near Inc <hello@nearprotocol.com>"]
+authors = ["Felix Niemeyer <niemeyer.felix@gmail.com>", "Near Inc <hello@nearprotocol.com>"]
 edition = "2018"
 
 [lib]
