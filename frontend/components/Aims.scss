@@ -1,8 +1,11 @@
-.aim {
-  background-color: #fff3; 
+.aim, .connection {
   border-radius: 0.25rem; 
   margin: 0.5rem; 
   padding: 0.5rem; 
+}
+
+.aim {
+  background-color: #fff3; 
 
   .info, .connect {
     display: inline-block; 
@@ -27,4 +30,8 @@
       box-shadow: 0 0 0.3rem #111b; 
     }
   }
+}
+
+.connection {
+  background-color: #fff3; 
 }
