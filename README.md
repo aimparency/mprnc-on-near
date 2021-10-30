@@ -194,4 +194,4 @@ cargo test --package status-message -- --nocapture
 ```
 
 ## when the contract compiles fine but there are errors when deploying try creating a new dev-account for deployment
-near dev-deploy -f res/status_message.wasm
+Anear dev-deploy -f res/mprnc.wasm
